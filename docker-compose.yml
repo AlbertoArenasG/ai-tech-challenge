@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    container_name: kavak-bot
+    env_file:
+      - .env
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      CSV_CATALOG_PATH: ${CSV_CATALOG_PATH}
+    volumes:
+      - ${CSV_HOST_DIR}:${CSV_CONTAINER_DIR}
+    ports:
+      - "8000:8000"
