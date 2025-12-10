@@ -4,7 +4,7 @@
 - [x] Ajustar `Car` y modelos relacionados para reflejar el CSV real.
 - [x] Implementar `CatalogService.load_catalog` cargando el CSV al arrancar.
 - [x] Implementar `CatalogService.search_cars` con filtros básicos por preferencia.
-- [ ] Completar `calculate_financing` con amortización y validaciones de rangos.
+- [x] Completar `calculate_financing` con amortización y validaciones de rangos.
 
 ## 2. Servicios conversacionales
 - [ ] Definir contrato Pydantic para `/chat` (entrada/salida).
@@ -20,7 +20,7 @@
 ## 4. Hardening y DX
 - [ ] Añadir pruebas unitarias para catálogo y financiamiento.
 - [x] Cobertura inicial de catálogo.
-- [ ] Cobertura de financiamiento.
+- [x] Cobertura de financiamiento.
 - [ ] Incorporar logging estructurado y manejo de errores consistente.
 - [ ] Documentar arquitectura y prompts (diagramas + README extendido).
 - [ ] Proponer roadmap a producción (deploy, evaluación continua, regresiones).
