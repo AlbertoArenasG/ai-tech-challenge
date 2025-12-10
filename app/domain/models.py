@@ -7,12 +7,18 @@ from pydantic import BaseModel
 class Car(BaseModel):
     """Representation of a car in the Kavak catalog."""
 
-    id: str
-    brand: str
+    stock_id: str
+    km: int
+    price: float
+    make: str
     model: str
     year: int
-    price: float
-    kilometers: int
+    version: str
+    bluetooth: bool | None = None
+    length_mm: float | None = None
+    width_mm: float | None = None
+    height_mm: float | None = None
+    car_play: bool | None = None
     # TODO: Revisit attributes once the final CSV schema (trim, transmission, location) is confirmed.
 
 

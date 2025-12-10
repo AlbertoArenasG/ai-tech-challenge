@@ -5,13 +5,20 @@
 2. El catálogo de ejemplo ya vive en `app/data/catalog.csv`; ajusta las rutas del `.env` solo si deseas reemplazarlo con otro archivo.
 3. Levanta el servicio con Docker Compose:
    ```bash
-   docker-compose up --build
+   docker-compose up --build -d
    ```
 4. Comprueba que el servidor esté operativo llamando al endpoint de salud:
    ```bash
    curl http://localhost:8000/health
    ```
    La respuesta esperada es `{"status":"ok"}`.
+
+## Pruebas dentro del contenedor
+Ejecuta la suite de pruebas directamente desde tu host (sin instalar Python) con:
+```bash
+docker exec -it kavak-bot pytest
+```
+Los tests viven bajo `tests/` y se copian dentro de la imagen, así que no necesitas preparar entornos locales.
 
 ## Notas adicionales
 - El punto de entrada es `app/main.py`, el cual expone FastAPI con los endpoints `/health` y `/chat`.
