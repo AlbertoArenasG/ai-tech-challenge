@@ -34,6 +34,11 @@ curl -X POST http://localhost:8000/chat \
 ```
 La respuesta incluirá el texto generado por el agente y, si aplica, recomendaciones del catálogo y un plan de financiamiento.
 
+Revisa `docs/manual_tests.md` para escenarios manuales que cubren `/chat` y el flujo de WhatsApp/Twilio.
+
+### Webhook de WhatsApp
+Configura el sandbox de Twilio para enviar mensajes HTTP POST a `http://<tu-host>/webhook/whatsapp` (usa `ngrok` si trabajas en local). El adaptador convertirá los campos `WaId`, `From` y `Body` en un `ChatRequest` y devolverá la respuesta del agente en texto plano para que Twilio la entregue al usuario.
+
 ## Notas adicionales
 - El punto de entrada es `app/main.py`, el cual expone FastAPI con los endpoints `/health` y `/chat`.
 - Si prefieres ejecutar sin Docker, instala las dependencias con `pip install -r requirements.txt` y corre `uvicorn app.main:app --reload`.

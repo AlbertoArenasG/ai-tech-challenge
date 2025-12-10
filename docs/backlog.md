@@ -13,9 +13,9 @@
 - [x] Integrar la propuesta de valor de Kavak en el contexto (prompt o store) para FAQs fiables.
 
 ## 3. Integración WhatsApp/Twilio
-- [ ] Completar `parse_twilio_payload` y crear endpoint `/webhook/whatsapp`.
+- [x] Completar `parse_twilio_payload` y crear endpoint `/webhook/whatsapp`.
 - [ ] Firmar/validar las peticiones de Twilio (token, firmas).
-- [ ] Preparar script o instrucciones para configurar el sandbox.
+- [x] Preparar script o instrucciones para configurar el sandbox.
 
 ## 4. Hardening y DX
 - [ ] Añadir pruebas unitarias para catálogo y financiamiento.

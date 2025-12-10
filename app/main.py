@@ -3,9 +3,14 @@ import logging
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi import Depends
+from fastapi import Form
+from fastapi import Request
+from fastapi.responses import PlainTextResponse
 
 from app.config import get_settings
 from app.domain.schemas import ChatRequest, ChatResponse
+from app.adapters.whatsapp_adapter import format_twilio_response, parse_twilio_payload
 from app.services.agent_service import CommercialAgentService
 from app.services.catalog_service import CatalogService
 
@@ -41,10 +46,21 @@ async def health_check() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.post("/chat", response_model=ChatResponse)
-async def chat_endpoint(payload: ChatRequest) -> ChatResponse:
-    """Route inbound chat messages through the commercial agent."""
+def _handle_chat(payload: ChatRequest) -> ChatResponse:
     try:
         return agent_service.answer(payload)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/chat", response_model=ChatResponse)
+async def chat_endpoint(payload: ChatRequest) -> ChatResponse:
+    """Route inbound chat messages through the commercial agent."""
+    return _handle_chat(payload)
+
+@app.post("/webhook/whatsapp")
+async def whatsapp_webhook(request: Request) -> PlainTextResponse:
+    form = await request.form()
+    chat_request = parse_twilio_payload(dict(form))
+    response = _handle_chat(chat_request)
+    return PlainTextResponse(content=format_twilio_response(response))
