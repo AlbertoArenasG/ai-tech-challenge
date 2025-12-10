@@ -7,10 +7,10 @@
 - [x] Completar `calculate_financing` con amortización y validaciones de rangos.
 
 ## 2. Servicios conversacionales
-- [ ] Definir contrato Pydantic para `/chat` (entrada/salida).
-- [ ] Diseñar prompts y `CommercialAgentService.answer` con integración a OpenAI.
+- [x] Definir contrato Pydantic para `/chat` (entrada/salida).
+- [x] Diseñar prompts y `CommercialAgentService.answer` con integración a OpenAI.
 - [ ] Incluir manejo de contexto (historial corto) para reducir alucinaciones.
-- [ ] Integrar la propuesta de valor de Kavak en el contexto (prompt o store) para FAQs fiables.
+- [x] Integrar la propuesta de valor de Kavak en el contexto (prompt o store) para FAQs fiables.
 
 ## 3. Integración WhatsApp/Twilio
 - [ ] Completar `parse_twilio_payload` y crear endpoint `/webhook/whatsapp`.

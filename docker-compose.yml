@@ -9,6 +9,7 @@ services:
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       CSV_CATALOG_PATH: ${CSV_CATALOG_PATH}
+      VALUE_PROPOSITION_PATH: ${VALUE_PROPOSITION_PATH}
     volumes:
       - ${CSV_HOST_DIR}:${CSV_CONTAINER_DIR}
     ports:
