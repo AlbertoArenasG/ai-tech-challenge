@@ -38,7 +38,9 @@ La respuesta incluirá el texto generado por el agente y, si aplica, recomendaci
 
 El parser interno extrae marca, modelo, alias comunes (ej. “VW”), años y montos desde lenguaje natural, por lo que no es necesario enviar JSON estructurado cuando el mensaje llega desde WhatsApp.
 
-Revisa `docs/manual_tests.md` para escenarios manuales que cubren `/chat` y el flujo de WhatsApp/Twilio.
+Revisa `docs/manual_tests.md`
+El detalle de componentes y roadmap está en `docs/architecture.md`, `docs/prompt_strategy.md` y `docs/roadmap.md`. para escenarios manuales que cubren `/chat` y el flujo de WhatsApp/Twilio.
+El detalle de componentes y roadmap está en `docs/architecture.md`, `docs/prompt_strategy.md` y `docs/roadmap.md`.
 
 ### Webhook de WhatsApp
 Configura el sandbox de Twilio para enviar mensajes HTTP POST a `http://<tu-host>/webhook/whatsapp` (usa `ngrok` si trabajas en local). El adaptador convertirá los campos `WaId`, `From` y `Body` en un `ChatRequest` y devolverá la respuesta del agente en texto plano para que Twilio la entregue al usuario.
