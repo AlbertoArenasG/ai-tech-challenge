@@ -5,6 +5,8 @@ from typing import Any
 
 from app.domain.schemas import ChatRequest, ChatResponse
 
+MAX_WHATSAPP_LENGTH = 1500
+
 
 def parse_twilio_payload(payload: dict[str, Any]) -> ChatRequest:
     """Convert Twilio webhook payload into ChatRequest."""
@@ -34,4 +36,11 @@ def format_twilio_response(response: ChatResponse) -> str:
             f"Financiamiento: {plan.months} meses, pago mensual ${plan.monthly_payment}, total ${plan.total_paid}."
         )
 
-    return "\n\n".join(lines)
+    response_text = "\n\n".join(lines)
+    return _truncate(response_text)
+
+
+def _truncate(text: str) -> str:
+    if len(text) <= MAX_WHATSAPP_LENGTH:
+        return text
+    return text[: MAX_WHATSAPP_LENGTH - 3].rstrip() + "..."

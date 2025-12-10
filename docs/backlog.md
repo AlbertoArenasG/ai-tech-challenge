@@ -9,7 +9,9 @@
 ## 2. Servicios conversacionales
 - [x] Definir contrato Pydantic para `/chat` (entrada/salida).
 - [x] Diseñar prompts y `CommercialAgentService.answer` con integración a OpenAI.
-- [ ] Incluir manejo de contexto (historial corto) para reducir alucinaciones.
+- [x] Interpretar lenguaje natural para extraer preferencias y financiamiento.
+ - [x] Incluir manejo de contexto (historial corto) para reducir alucinaciones.
+ - [x] Persistir contexto a corto plazo con Redis para recordar datos del cliente.
 - [x] Integrar la propuesta de valor de Kavak en el contexto (prompt o store) para FAQs fiables.
 
 ## 3. Integración WhatsApp/Twilio

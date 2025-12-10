@@ -37,6 +37,34 @@ class CatalogService:
                 results.append(car)
         return results
 
+    def suggest_alternatives(self, preferences: dict | None = None, limit: int = 3) -> list[Car]:
+        """Return fallback vehicles based on the best available information."""
+        if not self._catalog:
+            return []
+
+        filters = preferences or {}
+        make = filters.get("make")
+        max_price = filters.get("max_price")
+
+        candidates: list[Car]
+        if make:
+            candidates = [car for car in self._catalog if car.make.lower() == make.lower()]
+            if not candidates:
+                candidates = [car for car in self._catalog if make.lower() in car.make.lower()]
+        else:
+            candidates = list(self._catalog)
+
+        if not candidates:
+            candidates = list(self._catalog)
+
+        if max_price:
+            target = float(max_price)
+            candidates.sort(key=lambda car: abs(car.price - target))
+        else:
+            candidates.sort(key=lambda car: (car.price, car.km))
+
+        return candidates[:limit]
+
     @staticmethod
     def _row_to_car(row: dict[str, Any]) -> Car:
         """Convert CSV row into a Car model."""
@@ -94,3 +122,21 @@ class CatalogService:
             return False
 
         return True
+
+    def find_make_by_model(self, model: str) -> str | None:
+        """Return the make associated with a model if known."""
+        target = model.lower()
+        for car in self._catalog:
+            if car.model.lower() == target:
+                return car.make
+        return None
+
+    def list_makes(self) -> set[str]:
+        """Return the set of makes currently loaded in the catalog."""
+        return {car.make for car in self._catalog}
+
+    def list_models(self, make: str | None = None) -> set[str]:
+        """Return known models, optionally filtered by make."""
+        if make:
+            return {car.model for car in self._catalog if car.make.lower() == make.lower()}
+        return {car.model for car in self._catalog}

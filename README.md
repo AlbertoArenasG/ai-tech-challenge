@@ -13,6 +13,8 @@
    ```
    La respuesta esperada es `{"status":"ok"}`.
 
+Redis se levanta junto al bot (puedes inspeccionarlo en `localhost:6379` si necesitas revisar el estado de las conversaciones).  
+
 ## Pruebas dentro del contenedor
 Ejecuta la suite de pruebas directamente desde tu host (sin instalar Python) con:
 ```bash
@@ -33,6 +35,8 @@ curl -X POST http://localhost:8000/chat \
       }'
 ```
 La respuesta incluirá el texto generado por el agente y, si aplica, recomendaciones del catálogo y un plan de financiamiento.
+
+El parser interno extrae marca, modelo, alias comunes (ej. “VW”), años y montos desde lenguaje natural, por lo que no es necesario enviar JSON estructurado cuando el mensaje llega desde WhatsApp.
 
 Revisa `docs/manual_tests.md` para escenarios manuales que cubren `/chat` y el flujo de WhatsApp/Twilio.
 

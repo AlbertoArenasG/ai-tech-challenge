@@ -10,7 +10,19 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       CSV_CATALOG_PATH: ${CSV_CATALOG_PATH}
       VALUE_PROPOSITION_PATH: ${VALUE_PROPOSITION_PATH}
+      REDIS_URL: redis://redis:6379/0
     volumes:
       - ${CSV_HOST_DIR}:${CSV_CONTAINER_DIR}
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: kavak-redis
+    restart: unless-stopped
+    volumes:
+      - ./redis-data:/data
+    ports:
+      - "6379:6379"

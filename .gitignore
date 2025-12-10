@@ -85,3 +85,4 @@ dotenv/
 # Project-specific
 .env
 .env.example.backup
+redis-data/

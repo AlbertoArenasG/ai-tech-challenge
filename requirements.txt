@@ -6,3 +6,4 @@ python-dotenv
 pytest
 openai
 python-multipart
+redis

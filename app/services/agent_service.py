@@ -64,15 +64,27 @@ class CommercialAgentService:
         self.llm_client = LLMClient(settings.openai_api_key, settings.openai_model)
         self.knowledge_base = self._load_knowledge_base(knowledge_base_path) or DEFAULT_VALUE_PROPOSITION
 
-    def answer(self, request: ChatRequest) -> ChatResponse:
+    def answer(
+        self,
+        request: ChatRequest,
+        missing_fields: list[str] | None = None,
+        intent: str | None = None,
+        expected_slot: str | None = None,
+        slot_options: dict | None = None,
+    ) -> ChatResponse:
         """Route a chat request through catalog, finance and LLM components."""
-        recommendations = self._build_recommendations(request.preferences)
+        recommendations, used_fallback = self._build_recommendations(request.preferences, intent=intent)
         financing_plan = self._build_financing_plan(request)
 
         assistant_message = self._generate_agent_reply(
             user_message=request.message,
             recommendations=recommendations,
             financing_plan=financing_plan,
+            missing_fields=missing_fields or [],
+            used_fallback=used_fallback,
+            intent=intent or "unknown",
+            expected_slot=expected_slot,
+            slot_options=slot_options,
         )
 
         return ChatResponse(
@@ -81,12 +93,28 @@ class CommercialAgentService:
             financing_plan=financing_plan,
         )
 
-    def _build_recommendations(self, preferences: dict[str, Any] | None) -> list[Recommendation]:
-        if not preferences:
-            return []
+    def _build_recommendations(
+        self,
+        preferences: dict[str, Any] | None,
+        intent: str | None,
+    ) -> tuple[list[Recommendation], bool]:
+        if intent in {"greeting", "small_talk", "ambiguous", "off_topic"}:
+            return ([], False)
+        prefs = preferences or {}
+        cars = self.catalog_service.search_cars(prefs)
+        if cars:
+            return ([Recommendation(car=car, reason="Coincide con tus preferencias") for car in cars[:3]], False)
 
-        cars = self.catalog_service.search_cars(preferences)
-        return [Recommendation(car=car, reason="Matches stated preferences") for car in cars[:3]]
+        alternatives = self.catalog_service.suggest_alternatives(prefs)
+        if alternatives:
+            return (
+                [
+                    Recommendation(car=car, reason="Alternativa disponible similar a lo que buscas")
+                    for car in alternatives
+                ],
+                True,
+            )
+        return ([], False)
 
     @staticmethod
     def _load_knowledge_base(path: str | None) -> str | None:
@@ -114,12 +142,20 @@ class CommercialAgentService:
         user_message: str,
         recommendations: list[Recommendation],
         financing_plan: FinancingPlan | None,
+        missing_fields: list[str],
+        used_fallback: bool,
+        intent: str,
+        expected_slot: str | None,
+        slot_options: dict | None = None,
     ) -> str:
         system_prompt = (
             "Eres un agente comercial de Kavak. Solo puedes responder utilizando la información "
             "incluida en el contexto proporcionado. Si el cliente pregunta sobre la propuesta de valor, "
             "debes citar únicamente lo que aparece en el archivo oficial. No inventes datos ni hagas "
-            "suposiciones, y si falta información responde que no tienes esa información disponible."
+            "suposiciones. Mantén un tono proactivo: ofrece siempre una recomendación o un próximo paso "
+            "antes de solicitar más datos. Evita frases negativas como 'no tengo información'; en su lugar "
+            "propón alternativas y formula preguntas cortas solo al final. No repitas las listas de recomendaciones, "
+            "pues el canal las enviará por separado."
         )
 
         context_sections = [self.knowledge_base]
@@ -136,11 +172,32 @@ class CommercialAgentService:
                 f"total paid {financing_plan.total_paid}."
             )
 
+        if used_fallback:
+            context_sections.append(
+                "Se enviaron alternativas similares aunque no coincidan al 100% con la solicitud inicial; enfatiza que son opciones cercanas."
+            )
+
+        if missing_fields:
+            context_sections.append(
+                "Datos faltantes detectados: " + ", ".join(missing_fields) + ". Pide esta información amablemente."
+            )
+
+        context_sections.append(f"Intento detectado: {intent}.")
+        if expected_slot:
+            context_sections.append(
+                f"Dato prioritario pendiente: {expected_slot}. Formula una única pregunta directa sobre ese dato si aplica."
+            )
+        if slot_options:
+            options_text = "\n".join(f"- {opt}" for opt in slot_options["options"])
+            context_sections.append(
+                f"Opciones disponibles para {slot_options['slot']}:\n{options_text}. Indica al cliente que elija solo una de ellas."
+            )
         context = "\n\n".join(context_sections)
         user_prompt = (
             "Mensaje del cliente: "
             f"{user_message}\n\nContexto autorizado:\n{context}\n\n"
             "Instrucciones: responde en español, cita solamente datos que estén en el contexto y, si no "
-            "existe la información solicitada, aclara que no está disponible."
+            "existe la información solicitada, aclara que no está disponible. Si falta información clave, "
+            "formula una pregunta concreta para poder ayudar mejor."
         )
         return self.llm_client.generate(system_prompt, user_prompt)
