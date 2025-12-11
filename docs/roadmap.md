@@ -1,7 +1,7 @@
 # Roadmap hacia producción
 
 ## 1. Endurecer la API
-- Firmar las peticiones de Twilio con el `X-Twilio-Signature` y rechazar peticiones no firmadas.
+- Firmar las peticiones de Twilio con el `X-Twilio-Signature` y rechazar peticiones no firmadas (pendiente para producción).
 - Añadir logging estructurado (JSON) para `chat.request`/`chat.response` con IDs de conversación y métricas (latencia, tokens, costo).
 - Trazas/alertas básicas (Prometheus u OpenTelemetry) para saber si el agente falla o excede tiempos.
 
@@ -11,6 +11,7 @@
 - Medir satisfacción en producción con etiquetas manuales (thumbs-up/down) o keywords; almacenar en Redis o base ligera.
 
 ## 3. Despliegue y escalamiento
+- Firmar/validar peticiones de Twilio (X-Twilio-Signature) antes de mover a producción.
 - Empaquetar en imagen oficial y desplegar en ECS con autoscaling (basado en CPU/latencia).
 - Mover Redis a un servicio administrado (Elasticache) para alta disponibilidad.
 - Usar Secrets Manager/Parameter Store para credenciales.

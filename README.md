@@ -48,3 +48,19 @@ Configura el sandbox de Twilio para enviar mensajes HTTP POST a `http://<tu-host
 ## Notas adicionales
 - El punto de entrada es `app/main.py`, el cual expone FastAPI con los endpoints `/health` y `/chat`.
 - Si prefieres ejecutar sin Docker, instala las dependencias con `pip install -r requirements.txt` y corre `uvicorn app.main:app --reload`.
+
+## Logging y Pruebas
+- Las respuestas del agente se formatean en texto plano y se pueden inspeccionar usando `docker logs -f kavak-bot` (ver eventos `chat.request`/`chat.response`).
+- También puedes llamar a `/chat` directamente con `curl` para ver el flujo en consola:
+  ```bash
+  curl -X POST http://localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -d '{"user_id": "demo", "message": "Busco un Vento 2019"}'
+  ```
+  A continuación ejecuta `docker logs -f kavak-bot` y verás entradas
+  similares a:
+  ```text
+  INFO: {"event": "chat.request", "user": "demo", "channel": "direct", ...}
+  INFO: {"event": "chat.response", "user": "demo", "channel": "direct", ...}
+  ```
+- Importa `docs/tests/postman_collection.json` en Postman/ThunderClient para ejecutar smoke tests (`/health`, `/chat` con catálogo y caso inválido).

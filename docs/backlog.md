@@ -16,7 +16,7 @@
 
 ## 3. Integración WhatsApp/Twilio
 - [x] Completar `parse_twilio_payload` y crear endpoint `/webhook/whatsapp`.
-- [ ] Firmar/validar las peticiones de Twilio (token, firmas).
+- [ ] Firmar/validar las peticiones de Twilio (token, firmas) - dejar como tarea de hardening/producción.
 - [x] Preparar script o instrucciones para configurar el sandbox.
 
 ## 4. Hardening y DX

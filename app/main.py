@@ -1,4 +1,5 @@
 """FastAPI application entry point."""
+import json
 import logging
 from pathlib import Path
 
@@ -17,7 +18,8 @@ from app.services.conversation_store import ConversationStore
 from app.services.intent_classifier import IntentClassifier
 from app.services.option_builder import OptionBuilder
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger("kavak.bot")
+LOGGER.setLevel(logging.INFO)
 
 app = FastAPI(title="Kavak Commercial Bot")
 settings = get_settings()
@@ -159,6 +161,17 @@ def _handle_chat(payload: ChatRequest) -> ChatResponse:
     missing_fields = message_parser.identify_missing_fields(payload, enriched_payload)
     expected_slot = _safe_get_expected_slot(payload.user_id)
     intent = intent_classifier.classify(payload.message)
+    LOGGER.info(
+        json.dumps(
+            {
+                "event": "chat.request",
+                "user": payload.user_id,
+                "channel": payload.channel or "direct",
+                "intent": intent,
+                "has_preferences": bool(enriched_payload.preferences),
+            }
+        )
+    )
 
     slot_options = None
     if intent == "greeting":
@@ -180,13 +193,26 @@ def _handle_chat(payload: ChatRequest) -> ChatResponse:
         _safe_clear_question(payload.user_id)
 
     try:
-        return agent_service.answer(
+        response = agent_service.answer(
             enriched_payload,
             missing_fields=missing_fields,
             intent=intent,
             expected_slot=expected_slot,
             slot_options=slot_options,
         )
+        LOGGER.info(
+            json.dumps(
+                {
+                    "event": "chat.response",
+                    "user": payload.user_id,
+                    "channel": payload.channel or "direct",
+                    "intent": intent,
+                    "recommendations": len(response.recommendations),
+                    "has_financing": bool(response.financing_plan),
+                }
+            )
+        )
+        return response
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 

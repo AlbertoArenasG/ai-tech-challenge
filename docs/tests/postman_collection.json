@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "Kavak Bot API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "chat_health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "chat_catalog",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"demo\",\n  \"message\": \"Busco un SUV Toyota 2019 con menos de 80k km\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/chat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "chat_finance_invalid",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"demo\",\n  \"message\": \"Quiero financiamiento\",\n  \"financing\": {\n    \"car_price\": 100000,\n    \"down_payment\": 10000,\n    \"years\": 10\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/chat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["chat"]
+        }
+      }
+    }
+  ]
+}

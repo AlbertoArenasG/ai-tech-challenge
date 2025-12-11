@@ -9,6 +9,8 @@
    - Esperado: respuesta basada únicamente en `app/data/value_proposition.md`.
 3. **Validación de financiamiento**
    - Enviar `years` fuera del rango. Esperar `400 Bad Request`.
+4. **Colección automática (Postman/ThunderClient)**
+   - Importar `/docs/tests/postman_collection.json` y ejecutar las peticiones `chat_health`, `chat_catalog`, `chat_finance_invalid`.
 
 ## 2. WhatsApp/Twilio
 1. Configurar el sandbox de Twilio y apuntar el webhook a `https://<tu-ngrok>/webhook/whatsapp`.
