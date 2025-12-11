@@ -14,8 +14,12 @@
 
 ## 2. WhatsApp/Twilio
 1. Configurar el sandbox de Twilio y apuntar el webhook a `https://<tu-ngrok>/webhook/whatsapp`.
-2. Mensajes sugeridos:
-   - "Hola, busco un sedán 2019 con menos de 60k km" → debería responder con recomendaciones.
-   - "¿Qué beneficios ofrece Kavak?" → debe contestar solo con la propuesta de valor.
-   - "Cotiza un financiamiento para 400k con 80k de enganche a 4 años" → revisar que llegue el plan.
-3. Revisar logs en `docker logs -f kavak-bot` para observar `chat.request`/`chat.response` (cuando se agreguen) y las respuestas enviadas a Twilio.
+2. Crear una cuenta de Twilio, activar el sandbox de WhatsApp y conectar el número de prueba.
+3. Ejecutar `ngrok http 8000` y copiar la URL HTTPS en el webhook.
+4. Enviar `join <codigo>` al número de Twilio y usa los mensajes sugeridos para validar el bot en tiempo real.
+5. Revisar logs en `docker logs -f kavak-bot` para observar `chat.request`/`chat.response`.
+
+   - Crear una cuenta en Twilio, activar el sandbox de WhatsApp y conectar el número de prueba.
+   - Ejecutar `ngrok http 8000` y copiar la URL HTTPS en el webhook del sandbox.
+   - Enviar `join <codigo>` al número de Twilio desde tu teléfono.
+   - Vale reproducir los mensajes anteriores y revisar el bot en tiempo real.
