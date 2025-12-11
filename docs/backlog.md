@@ -16,16 +16,12 @@
 
 ## 3. Integración WhatsApp/Twilio
 - [x] Completar `parse_twilio_payload` y crear endpoint `/webhook/whatsapp`.
-- [ ] Firmar/validar las peticiones de Twilio (token, firmas) - tarea pendiente para producción.
 - [x] Preparar script o instrucciones para configurar el sandbox.
 
 ## 4. Hardening y DX
-- [ ] Añadir pruebas unitarias para catálogo y financiamiento.
-- [x] Cobertura inicial de catálogo.
-- [x] Cobertura de financiamiento.
-- [ ] Incorporar logging estructurado y manejo de errores consistente.
-- [ ] Documentar arquitectura y prompts (diagramas + README extendido).
-- [ ] Proponer roadmap a producción (deploy, evaluación continua, regresiones).
+- [ ] Incorporar logging estructurado/errores (documentado en README).
+- [x] Documentación de arquitectura y prompts (ver README + docs).
+- [x] Propuesta de roadmap a producción (docs/roadmap.md).
 
 ## 5. Demo y entrega
 - [ ] Crear colección o script de pruebas (curl/Thunder Client/Postman).

@@ -70,3 +70,9 @@ Configura el sandbox de Twilio para enviar mensajes HTTP POST a `http://<tu-host
 2. Ejecuta `ngrok http 8000` y pega la URL HTTPS en el webhook (`/webhook/whatsapp`).
 3. Desde tu teléfono envía `join <codigo>` al número de Twilio para vincularlo.
 4. Usa los mensajes sugeridos de `docs/manual_tests.md` para validar el bot y observa los logs con `docker logs -f kavak-bot`.
+
+## Arquitectura y Prompts
+- Diagrama general: `docs/architecture_mermaid.md`.
+- Flujo de prompts: `docs/prompt_flow_mermaid.md`.
+- Detalles de componentes y estrategia en `docs/architecture.md` y `docs/prompt_strategy.md`.
+- Roadmap y mejoras: `docs/roadmap.md`.
